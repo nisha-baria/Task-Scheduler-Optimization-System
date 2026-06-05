@@ -1,8 +1,8 @@
-## Task Scheduler Optimization System 🚀
+Task Scheduler Optimization System 🚀
 
 A resilient, production-grade constraint-aware task scheduling and resource allocation optimizer. This system balances complex multi-stage software workflows under strict real-world limitations (Precedence/Dependencies, Shift hours, and Talent skills) utilizing a custom zero-dependency algorithmic backend and an interactive Gantt chart dashboard.
 
-## 🧠 Core Computer Science & DSA Concepts Mapping
+🧠 Core Computer Science & DSA Concepts Mapping
 
 This project is built from scratch without bulky external optimization libraries, serving as an excellent demonstration of fundamental data structures and algorithms applied to complex systems design:
 
@@ -12,23 +12,23 @@ Kahn's Topological Sorting Algorithm: Runs in $\mathcal{O}(V + E)$ to evaluate a
 
 Dynamic Priority Queue (Heuristic Sorters): Solves scheduling tie-breakers dynamically in $\mathcal{O}(N \log N)$ by ordering candidates using multiple indicators:
 
+
 $$\text{Priority Value} \rightarrow \text{Profit Yield} \rightarrow \text{Earliest Deadline First (EDF)}$$
 
 Greedy Resource Allocation with Interval Partitioning: Automatically tracks timeline segments, moving tasks across day shifts dynamically when capacity is reached.
 
-## 📁 Repository Structure
+📁 Repository Structure
 
-The code is highly modular, separating ingestion data models, algorithmic core solvers, file output systems, and interactive visualization layouts:
+The code is highly modular, separating ingestion data models, algorithmic core solvers, file output systems, and interactive visualization layouts.
 
 Task-Scheduler-Optimization-System/
 │
-├── data/                      # Source csv datasets
+├── data/                      # Source CSV datasets
 │   └── tasks.csv              # Row values: id, duration, deadline, priority, depends_on
 │
 ├── src/                       # Main Python Backend Packages
 │   ├── __init__.py            # Declares folder as importable package
-│   ├── scheduler_engine.py    # Topological Sort graph logic & allocation engines
-│   └── report_writer.py       # Exporter utility dumping text analytics reports
+│   └── scheduler_engine.py    # Topological Sort graph logic & allocation engines
 │
 ├── outputs/                   # Automatically generated analytical logs
 │   └── performance_report.txt # Full timeline logging, scores, and delay breakdowns
@@ -38,7 +38,7 @@ Task-Scheduler-Optimization-System/
 └── README.md                  # Comprehensive Portfolio Presentation (This file)
 
 
-## 🚀 Execution & Run Guide
+🚀 Execution & Run Guide
 
 1. Run the Python Backend Pipeline
 
@@ -50,6 +50,7 @@ python main.py
 # Mac / Linux Terminals
 python3 main.py
 
+
 2. View the Live Interactive Gantt Dashboard
 
 Simply open the index.html file in any modern web browser (Double-click index.html).
@@ -58,7 +59,7 @@ Interactive Sandbox: Add mock custom tasks, set constraints, and see the timelin
 
 Play Simulation: Click Play Simulation 🎬 to see the Kahn's Topological heuristic algorithm arrange tasks step-by-step with beautiful glowing visuals.
 
-## 📊 Comparative Analysis & Output Log Trace
+📊 Comparative Analysis & Output Log Trace
 
 Standard Terminal Console Output
 
@@ -83,7 +84,8 @@ Step 4: Writing evaluation data report onto disk vectors...
 📝 Full analytical performance log compiled at 'outputs/performance_report.txt'
 ----------------------------------------------------------------
 
-## File Output Summary (outputs/performance_report.txt)
+
+File Output Summary (outputs/performance_report.txt)
 
 The generated text report provides an audit trace mapping exact hour-blocks to tasks, highlighting any deadlines that were overrun due to resource availability limit:
 
