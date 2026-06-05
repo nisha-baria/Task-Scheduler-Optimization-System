@@ -21,7 +21,7 @@ Greedy Resource Allocation with Interval Partitioning: Automatically tracks time
 The code is highly modular, separating ingestion data models, algorithmic core solvers, file output systems, and interactive visualization layouts.
 
 Task-Scheduler-Optimization-System/
-│
+'''│
 ├── data/                      # Source CSV datasets
 │   └── tasks.csv              # Row values: id, duration, deadline, priority, depends_on
 │
@@ -35,7 +35,7 @@ Task-Scheduler-Optimization-System/
 ├── index.html                 # Premium Interactive Gantt Chart HTML App Dashboard
 ├── main.py                    # Command-Line System Pipeline Entrypoint
 └── README.md                  # Comprehensive Portfolio Presentation (This file)
-
+'''
 ## 🚀 Execution & Run Guide
 
 1. Run the Python Backend Pipeline
@@ -89,11 +89,12 @@ The generated text report provides an audit trace mapping exact hour-blocks to t
 ⚠️ TOTAL MISSED DEADLINES LOG COUNTER: 0
 
 👉 --- CRITICAL EXECUTED PROGRESSION SEQUENCE ---
+'''
  🕒 [Hour 00:00 -> Hour 04:00] ➔ Task Name: T1 | Yield: +40 Points
  🕒 [Hour 04:00 -> Hour 06:00] ➔ Task Name: T3 | Yield: +50 Points
  🕒 [Hour 06:00 -> Hour 12:00] ➔ Task Name: T2 | Yield: +30 Points
  🕒 [Hour 12:00 -> Hour 20:00] ➔ Task Name: T4 | Yield: +10 Points
-
+'''
 ## 📈 Learning Outcomes & Software Engineering Rigor
 
 Defensive Input Handling: Built strict type-checking and value recovery fallbacks inside Python parser arrays, protecting system runtimes against empty strings, invisible spaces, and corrupted CSV headers.
