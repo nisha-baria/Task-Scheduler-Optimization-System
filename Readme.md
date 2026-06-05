@@ -12,13 +12,14 @@ Kahn's Topological Sorting Algorithm: Runs in $\mathcal{O}(V + E)$ to evaluate a
 
 Dynamic Priority Queue (Heuristic Sorters): Solves scheduling tie-breakers dynamically in $\mathcal{O}(N \log N)$ by ordering candidates using multiple indicators:
 
+
 $$\text{Priority Value} \rightarrow \text{Profit Yield} \rightarrow \text{Earliest Deadline First (EDF)}$$
 
 Greedy Resource Allocation with Interval Partitioning: Automatically tracks timeline segments, moving tasks across day shifts dynamically when capacity is reached.
 
 ## 📁 Repository Structure
 
-The code is highly modular, separating ingestion data models, algorithmic core solvers, file output systems, and interactive visualization layouts.
+The code is highly modular, separating Ingestion Data Models, Algorithmic Core Solvers, File Output Systems, and Interactive Visualization Layouts.
 
 Task-Scheduler-Optimization-System/
 │
@@ -37,7 +38,7 @@ Task-Scheduler-Optimization-System/
 └── README.md                  # Comprehensive Portfolio Presentation (This file)
 
 
-## 🚀 Execution & Run Guide
+##🚀 Execution & Run Guide
 
 1. Run the Python Backend Pipeline
 
@@ -98,6 +99,8 @@ The generated text report provides an audit trace mapping exact hour-blocks to t
 
 ## 📈 Learning Outcomes & Software Engineering Rigor
 
-Defensive Input Handling: Built strict type-checking and value recovery fallbacks inside Python parser arrays, protecting system runtimes against empty strings, invisible spaces, and corrupted CSV headers.
+Defensive Data Handling: Built strict type-checking and value recovery fallbacks inside Python parser arrays, protecting system runtimes against empty strings, invisible spaces, and corrupted CSV headers.
 
-Microservices-style Separation of Conce
+Separation of Concerns: Designed and structured independent modular files matching modern enterprise standard codebases.
+
+Client-Side Visual Simulation: Bridged backend CS graph theories with clean, high-fidelity responsive animations on the frontend to deliver instant value to business stakeholders.
