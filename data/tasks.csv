@@ -1,0 +1,5 @@
+task_id,duration_h,deadline_h,priority,profit,depends_on
+T1,4,24,3,40,
+T2,6,32,2,30,T1
+T3,2,20,5,50,T1
+T4,8,40,1,10,

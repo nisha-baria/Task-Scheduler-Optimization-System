@@ -1,0 +1,21 @@
+Python Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+ENV/local/
+
+Python Cache & Compiled Files
+pycache/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+Operating System Files
+.DS_Store
+Thumbs.db
+
+Local Workspace Settings
+.vscode/
+.idea/

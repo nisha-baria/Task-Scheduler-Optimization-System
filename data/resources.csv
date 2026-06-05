@@ -1,0 +1,3 @@
+res_id,skills,shift_start_h,shift_end_h,max_hours_per_day
+R1,backend|qa,9,17,8
+R2,frontend,10,18,8

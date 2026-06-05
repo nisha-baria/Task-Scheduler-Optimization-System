@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Task Scheduler Optimization Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#030712',
+                        }
+                    },
+                    animation: {
+                        'glow': 'glowEffect 2s infinite alternate',
+                    },
+                    keyframes: {
+                        glowEffect: {
+                            '0%': { boxShadow: '0 0 5px rgba(99, 102, 241, 0.2)' },
+                            '10%': { boxShadow: '0 0 20px rgba(99, 102, 241, 0.6)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for premium look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        
+        <!-- HEADER BRANDING -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-800 pb-6 mb-8 gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                        Task Scheduler Optimization
+                    </h1>
+                    <p class="text-xs md:text-sm text-slate-400 font-medium">
+                        Enterprise DSA Solver Portfolio Dashboard (Pure Client-Side Simulation)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Algorithm Mode Selector & Play Button -->
+            <div class="flex flex-wrap items-center gap-3 bg-slate-900 border border-slate-800 p-2 rounded-xl">
+                <button id="btn-play" onclick="triggerSimulation()" class="px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1.5 shadow-lg shadow-emerald-900/20 active:scale-95">
+                    <span id="play-icon">▶</span> Play Simulation 🎬
+                </button>
+                <div class="w-[1px] h-6 bg-slate-800 hidden md:block"></div>
+                <button id="btn-greedy" onclick="setAlgorithm('greedy')" class="px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg">
+                    Optimal Greedy (Heap/Topo)
+                </button>
+                <button id="btn-fcfs" onclick="setAlgorithm('fcfs')" class="px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+                    FCFS Baseline
+                </button>
+            </div>
+        </div>
+
+        <!-- LIVE METRICS WIDGETS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- KPI: Profit Core -->
+            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl relative overflow-hidden backdrop-blur-md">
+                <div class="absolute right-4 top-4 opacity-10 text-amber-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm-2 4h4M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10" />
+                    </svg>
+                </div>
+                <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Optimized Profit Score</p>
+                <h2 id="metric-profit" class="text-3xl md:text-4xl font-extrabold text-amber-400 mt-2">$0K</h2>
+                <p class="text-xs text-slate-500 mt-1">Succeeded with highest yield priority selection</p>
+            </div>
+
+            <!-- KPI: Successful Allocations -->
+            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl relative overflow-hidden backdrop-blur-md">
+                <div class="absolute right-4 top-4 opacity-10 text-emerald-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider">On-Time Deliveries</p>
+                <h2 id="metric-completed" class="text-3xl md:text-4xl font-extrabold text-emerald-400 mt-2">0 / 0</h2>
+                <p class="text-xs text-slate-500 mt-1">Tasks scheduled perfectly within deadline windows</p>
+            </div>
+
+            <!-- KPI: Delay Risks -->
+            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl relative overflow-hidden backdrop-blur-md">
+                <div class="absolute right-4 top-4 opacity-10 text-rose-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Deadline Breached Count</p>
+                <h2 id="metric-missed" class="text-3xl md:text-4xl font-extrabold text-rose-400 mt-2">0</h2>
+                <p class="text-xs text-slate-500 mt-1">Resource allocation overruns requiring optimization</p>
+            </div>
+        </div>
+
+        <!-- CORE ROW WITH INPUTS AND GANTT VISUALIZATION -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            
+            <!-- LEFT COLUMN: TASK CONFIGURATOR SANDBOX -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl">
+                    <h3 class="text-md font-bold text-slate-200 mb-4 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></span>
+                        Live Scenario Task Sandbox
+                    </h3>
+                    
+                    <!-- Quick Task Adding Form -->
+                    <form onsubmit="handleAddTask(event)" class="grid grid-cols-2 gap-3 mb-6 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="col-span-2 text-xs font-bold text-slate-400">Add Live Mock Task to Run</div>
+                        
+                        <div>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Task ID</label>
+                            <input type="text" id="task-id" value="T5" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" required>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Duration (Hours)</label>
+                            <input type="number" id="task-duration" min="1" max="12" value="4" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" required>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Deadline (Hours)</label>
+                            <input type="number" id="task-deadline" min="1" max="120" value="30" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" required>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Priority (1 to 5)</label>
+                            <input type="number" id="task-priority" min="1" max="5" value="3" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" required>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Profit ($ Value)</label>
+                            <input type="number" id="task-profit" min="5" max="100" value="25" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" required>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Skill Required</label>
+                            <select id="task-skill" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                                <option value="backend">Backend Eng</option>
+                                <option value="frontend">Frontend Eng</option>
+                                <option value="qa">QA Analyst</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Depends On (e.g. T1 - Optional)</label>
+                            <input type="text" id="task-depends" placeholder="e.g. T1" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                        </div>
+
+                        <button type="submit" class="col-span-2 mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-4 rounded transition flex items-center justify-center gap-1.5 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Append Task to Simulation RUN
+                        </button>
+                    </form>
+
+                    <!-- Dynamic List of Tasks -->
+                    <div id="tasks-list" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                        <!-- Filled Dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: INTERACTIVE GANTT CHART TIMELINE -->
+            <div class="lg:col-span-7">
+                <div class="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl h-full flex flex-col justify-between animate-glow">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-md font-bold text-slate-200 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                                Gantt Chart Execution Timeline ( <span id="dynamic-gantt-range" class="text-indigo-400 font-extrabold">0h - 48h</span> )
+                            </h3>
+                            <span class="text-xs bg-slate-800 text-slate-300 font-semibold px-2 py-0.5 rounded-full">
+                                Real-Time Updates
+                            </span>
+                        </div>
+
+                        <!-- Grid hour indicators (Absolute Centered Tick Marks) -->
+                        <div id="gantt-headers" class="relative h-6 mb-3 select-none">
+                            <!-- Filled Dynamically with absolute positioned ticks -->
+                        </div>
+
+                        <!-- Gantt Visual Channel Rows -->
+                        <div id="gantt-rows" class="space-y-6 mt-4">
+                            <!-- Filled Dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Legend indicators -->
+                    <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400 border-t border-slate-800/50 pt-4 mt-6">
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-gradient-to-r from-blue-500 to-indigo-600"></span>
+                            R1 (Backend/QA) Blocks
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-gradient-to-r from-purple-500 to-pink-600"></span>
+                            R2 (Frontend) Blocks
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded bg-gradient-to-r from-rose-500 to-pink-600 animate-pulse"></span>
+                            Deadline Breach Overrun
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-10 opacity-0 bg-slate-900 border border-emerald-500/30 text-emerald-400 text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 flex items-center gap-2 z-50">
+        <span class="bg-emerald-500/10 p-1.5 rounded-lg border border-emerald-500/20">✔</span>
+        <span id="toast-msg">Database synchronized successfully!</span>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        // Core Initial Datasets
+        let tasks = [
+            { id: 'T1', duration: 4, deadline: 24, priority: 3, profit: 40, skill: 'backend', dependsOn: [] },
+            { id: 'T2', duration: 6, deadline: 32, priority: 2, profit: 30, skill: 'frontend', dependsOn: ['T1'] },
+            { id: 'T3', duration: 2, deadline: 20, priority: 5, profit: 50, skill: 'qa', dependsOn: ['T1'] },
+            { id: 'T4', duration: 8, deadline: 40, priority: 1, profit: 10, skill: 'backend', dependsOn: [] }
+        ];
+
+        const resources = [
+            { id: 'R1', name: 'Dev-R1 (Backend/QA)', skills: ['backend', 'qa'], start: 9, end: 17, color: 'from-blue-500 to-indigo-600' },
+            { id: 'R2', name: 'Dev-R2 (Frontend Only)', skills: ['frontend'], start: 10, end: 18, color: 'from-purple-500 to-pink-600' }
+        ];
+
+        let currentAlgorithm = 'greedy';
+        let simulationInterval = null;
+        let isSimulating = false;
+
+        // Set algorithm selection mode
+        function setAlgorithm(algo) {
+            currentAlgorithm = algo;
+            const btnGreedy = document.getElementById('btn-greedy');
+            const btnFcfs = document.getElementById('btn-fcfs');
+            
+            if (algo === 'greedy') {
+                btnGreedy.className = "px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg";
+                btnFcfs.className = "px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
+            } else {
+                btnFcfs.className = "px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg";
+                btnGreedy.className = "px-4 py-1.5 text-xs md:text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
+            }
+            solveAndRender();
+        }
+
+        // Show elegant custom toast alerts
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('translate-y-10', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        // Kahn's Topological Sorting with multi-criteria Custom Priority Tie-Breakers
+        function solveAndRender(limitTasksCount = null) {
+            let sequence = [];
+            let activeTasks = limitTasksCount !== null ? tasks.slice(0, limitTasksCount) : tasks;
+            
+            if (currentAlgorithm === 'greedy') {
+                const inDegree = {};
+                const adj = {};
+                
+                activeTasks.forEach(t => {
+                    inDegree[t.id] = 0;
+                    adj[t.id] = [];
+                });
+
+                activeTasks.forEach(t => {
+                    t.dependsOn.forEach(dep => {
+                        if (adj[dep]) {
+                            adj[dep].push(t.id);
+                            inDegree[t.id]++;
+                        }
+                    });
+                });
+
+                let pool = activeTasks.filter(t => inDegree[t.id] === 0);
+
+                while (pool.length > 0) {
+                    // Sorting multi-indices: High priority first, then High Profit, then Earliest Deadline
+                    pool.sort((a, b) => {
+                        if (b.priority !== a.priority) return b.priority - a.priority;
+                        if (b.profit !== a.profit) return b.profit - a.profit;
+                        return a.deadline - b.deadline;
+                    });
+
+                    const current = pool.shift();
+                    sequence.push(current.id);
+
+                    if (adj[current.id]) {
+                        adj[current.id].forEach(child => {
+                            inDegree[child]--;
+                            if (inDegree[child] === 0) {
+                                const childObj = activeTasks.find(t => t.id === child);
+                                if (childObj) pool.push(childObj);
+                            }
+                        });
+                    }
+                }
+            } else {
+                // FCFS Baseline Sorter Mode
+                sequence = activeTasks.map(t => t.id);
+            }
+
+            // Calculate timeline mappings
+            const resState = {};
+            resources.forEach(r => {
+                resState[r.id] = { currentTime: r.start, currentDay: 0 };
+            });
+
+            const timeline = [];
+            const earliestEnd = {};
+            let totalProfit = 0;
+            let completedCount = 0;
+            let missedCount = 0;
+
+            sequence.forEach(tid => {
+                const task = activeTasks.find(t => t.id === tid);
+                if (!task) return;
+
+                const depTime = task.dependsOn.reduce((acc, depId) => Math.max(acc, earliestEnd[depId] || 0), 0);
+                let bestPlacement = null;
+
+                resources.forEach(res => {
+                    if (!res.skills.includes(task.skill)) return;
+
+                    let trackingTime = Math.max(resState[res.id].currentTime, depTime, res.start);
+                    let simDay = resState[res.id].currentDay;
+
+                    while (trackingTime + task.duration > res.end + simDay * 24) {
+                        simDay++;
+                        trackingTime = res.start + simDay * 24;
+                    }
+
+                    const lateness = Math.max(0, (trackingTime + task.duration) - task.deadline);
+                    const placementScore = lateness * 100 - task.priority * 10;
+
+                    if (bestPlacement === null || placementScore < bestPlacement.score) {
+                        bestPlacement = { score: placementScore, start: trackingTime, resId: res.id, day: simDay };
+                    }
+                });
+
+                if (bestPlacement) {
+                    const isOverrun = (bestPlacement.start + task.duration) > task.deadline;
+                    timeline.push({
+                        task_id: tid,
+                        res_id: bestPlacement.resId,
+                        start: bestPlacement.start,
+                        end: bestPlacement.start + task.duration,
+                        deadline: task.deadline,
+                        priority: task.priority,
+                        profit: task.profit,
+                        isOverrun: isOverrun
+                    });
+
+                    resState[bestPlacement.resId].currentTime = bestPlacement.start + task.duration;
+                    resState[bestPlacement.resId].currentDay = bestPlacement.day;
+                    earliestEnd[tid] = bestPlacement.start + task.duration;
+
+                    if (!isOverrun) {
+                        totalProfit += task.profit;
+                        completedCount++;
+                    } else {
+                        missedCount++;
+                    }
+                }
+            });
+
+            // Evaluate maximum timeline span for auto-scaling metrics
+            let maxTimelineValue = 48;
+            timeline.forEach(item => {
+                if (item.end > maxTimelineValue) {
+                    maxTimelineValue = item.end;
+                }
+            });
+            // Round up to nearest divisible value
+            maxTimelineValue = Math.ceil(maxTimelineValue / 12) * 12;
+
+            // Update Dynamic Headers Title Text
+            document.getElementById('dynamic-gantt-range').innerText = `0h - ${maxTimelineValue}h`;
+
+            // Update DOM metrics
+            document.getElementById('metric-profit').innerText = `$${totalProfit}K`;
+            document.getElementById('metric-completed').innerText = `${completedCount} / ${activeTasks.length}`;
+            document.getElementById('metric-missed').innerText = missedCount;
+
+            renderTasksList();
+            renderGanttHeaders(maxTimelineValue);
+            renderGanttChart(timeline, maxTimelineValue);
+        }
+
+        // Render dynamic timelines scale ticks
+        function renderGanttHeaders(maxHours) {
+            const container = document.getElementById('gantt-headers');
+            container.innerHTML = '';
+            
+            // Generate ticks at strategic intervals based on max scale values
+            const tickInterval = maxHours <= 48 ? 4 : (maxHours <= 96 ? 6 : 12);
+            for (let i = 0; i <= maxHours; i += tickInterval) {
+                const percentage = (i / maxHours) * 100;
+                const span = document.createElement('span');
+                span.className = "absolute text-[10px] text-slate-500 font-extrabold -translate-x-1/2 transition-all duration-300";
+                span.style.left = `${percentage}%`;
+                span.innerText = `${i}h`;
+                container.appendChild(span);
+            }
+        }
+
+        // Render current configuration tasks
+        function renderTasksList() {
+            const container = document.getElementById('tasks-list');
+            container.innerHTML = '';
+
+            tasks.forEach(t => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs hover:border-indigo-500/30 transition-all";
+                card.innerHTML = `
+                    <div>
+                        <span class="font-bold text-indigo-400 mr-2">${t.id}</span>
+                        <span class="bg-slate-800 text-slate-300 rounded px-1.5 py-0.5 text-[10px] mr-2 uppercase">${t.skill}</span>
+                        <span class="text-slate-400">
+                            Dur: <b class="text-slate-200">${t.duration}h</b> | Ddl: <b class="text-slate-200">${t.deadline}h</b> | Prio: <b class="text-slate-200">${t.priority}</b>
+                        </span>
+                        ${t.dependsOn.length > 0 ? `<div class="text-[10px] text-amber-500 font-semibold mt-1">🔒 Requires: ${t.dependsOn.join(', ')}</div>` : ''}
+                    </div>
+                    <button onclick="removeTask('${t.id}')" class="text-slate-500 hover:text-rose-400 p-1.5 rounded transition text-sm">🗑️</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render final Gantt timeline rows with full relative scaling formulas
+        function renderGanttChart(timeline, maxHours) {
+            const container = document.getElementById('gantt-rows');
+            container.innerHTML = '';
+
+            resources.forEach(res => {
+                const row = document.createElement('div');
+                row.className = "relative";
+                
+                const assignedTasks = timeline.filter(t => t.res_id === res.id);
+                
+                let barsHTML = '';
+                assignedTasks.forEach(p => {
+                    const leftPct = (p.start / maxHours) * 100;
+                    const widthPct = ((p.end - p.start) / maxHours) * 100;
+                    const colorClass = p.isOverrun 
+                        ? 'bg-gradient-to-r from-rose-500 to-pink-600 border border-rose-400 shadow-lg shadow-rose-950/20' 
+                        : `bg-gradient-to-r ${res.color} border border-indigo-400/20 shadow-lg shadow-indigo-950/20`;
+
+                    barsHTML += `
+                        <div class="absolute h-9 flex flex-col justify-center items-center rounded-lg text-white font-black text-xs shadow-md transition-all duration-300 hover:scale-[1.03] select-none ${colorClass}"
+                             style="left: ${leftPct}%; width: ${widthPct}%; min-width: 28px;"
+                             title="Task: ${p.task_id} | Start: ${p.start}h | End: ${p.end}h | Deadline: ${p.deadline}h">
+                            <span class="text-[11px] font-extrabold">${p.task_id}</span>
+                            <span class="text-[8px] opacity-80">${p.start}-${p.end}h</span>
+                        </div>
+                    `;
+                });
+
+                // Generate multi-day shifting shading for active working shift frames
+                let shadeHTML = '';
+                const totalDays = Math.ceil(maxHours / 24);
+                for (let day = 0; day < totalDays; day++) {
+                    const shiftStartHour = res.start + day * 24;
+                    const shiftEndHour = res.end + day * 24;
+
+                    const leftShade = (shiftStartHour / maxHours) * 100;
+                    const widthShade = ((shiftEndHour - shiftStartHour) / maxHours) * 100;
+
+                    // Shading non-working hour shifts
+                    shadeHTML += `
+                        <div class="absolute h-full bg-slate-900/30 border-x border-slate-800/10" style="left: ${leftShade}%; width: ${widthShade}%;"></div>
+                    `;
+                }
+
+                row.innerHTML = `
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>
+                            ${res.name}
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-semibold">Shift: ${res.start}:00 - ${res.end}:00</span>
+                    </div>
+                    <div class="relative h-12 bg-slate-950/80 border border-slate-800/80 rounded-xl overflow-hidden shadow-inner flex items-center">
+                        ${shadeHTML}
+                        ${barsHTML}
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Trigger step-by-step animation simulation
+        function triggerSimulation() {
+            if (isSimulating) {
+                // Clear the simulation thread
+                clearInterval(simulationInterval);
+                isSimulating = false;
+                document.getElementById('btn-play').innerHTML = '<span>▶</span> Play Simulation 🎬';
+                document.getElementById('btn-play').classList.remove('bg-rose-600', 'hover:bg-rose-500');
+                document.getElementById('btn-play').classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+                solveAndRender();
+                showToast("Simulation paused!");
+            } else {
+                isSimulating = true;
+                document.getElementById('btn-play').innerHTML = '<span>⏸</span> Pause Simulation 🎬';
+                document.getElementById('btn-play').classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+                document.getElementById('btn-play').classList.add('bg-rose-600', 'hover:bg-rose-500');
+                
+                let step = 1;
+                const totalSteps = tasks.length;
+                solveAndRender(step);
+                showToast("Simulation running step 1...");
+
+                simulationInterval = setInterval(() => {
+                    step++;
+                    if (step > totalSteps) {
+                        clearInterval(simulationInterval);
+                        isSimulating = false;
+                        document.getElementById('btn-play').innerHTML = '<span>▶</span> Play Simulation 🎬';
+                        document.getElementById('btn-play').classList.remove('bg-rose-600', 'hover:bg-rose-500');
+                        document.getElementById('btn-play').classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+                        showToast("Optimized sequence finished!");
+                        solveAndRender();
+                    } else {
+                        solveAndRender(step);
+                        showToast(`Simulating scheduling step ${step}...`);
+                    }
+                }, 1500);
+            }
+        }
+
+        // Handle adding custom tasks dynamically
+        function handleAddTask(e) {
+            e.preventDefault();
+            const id = document.getElementById('task-id').value.trim().toUpperCase();
+            const duration = Number(document.getElementById('task-duration').value);
+            const deadline = Number(document.getElementById('task-deadline').value);
+            const priority = Number(document.getElementById('task-priority').value);
+            const profit = Number(document.getElementById('task-profit').value);
+            const skill = document.getElementById('task-skill').value;
+            const dependsRaw = document.getElementById('task-depends').value.trim();
+            const dependsOn = dependsRaw ? dependsRaw.split(',').map(s => s.trim().toUpperCase()) : [];
+
+            // Prevent duplicate Task IDs
+            if (tasks.some(t => t.id === id)) {
+                showToast("Error: Task ID already exists!");
+                return;
+            }
+
+            tasks.push({ id, duration, deadline, priority, profit, skill, dependsOn });
+            
+            // Set up placeholder for next logical id
+            document.getElementById('task-id').value = `T${tasks.length + 2}`;
+            document.getElementById('task-depends').value = '';
+
+            showToast(`Task ${id} added successfully!`);
+            solveAndRender();
+        }
+
+        function removeTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            showToast(`Task ${id} removed!`);
+            solveAndRender();
+        }
+
+        // Run scheduler calculation instantly on load
+        window.onload = function () {
+            solveAndRender();
+        };
+    </script>
+</body>
+</html>
